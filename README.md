@@ -1,7 +1,7 @@
 
 
 
-## React Hook Form의 장점
+## React Hook Form을 사용하는 이유
 React Hook Form은 폼 관리 라이브러리 중 가장 널리 사용되는 옵션 중 하나로, 개발자들과의 협업에서 가장 이점을 가지고 있다고 생각하여 사용하게 되었습니다.
 
 - <b>최소 리렌더링</b> <br/>
@@ -17,3 +17,24 @@ React Hook Form은 폼 관리 라이브러리 중 가장 널리 사용되는 옵
   
 - 현재 코드에서 register와 <b>errors</b>를 활용해 입력 필드와 에러 메시지를 관리할수 있습니다.
 
+## register
+
+
+```
+import { UseFormRegister, FieldValues } from "react-hook-form";
+
+type RegisterFunction = UseFormRegister<FieldValues>;
+````
+
+- <b>UseFormRegister</b> : react-hook-form에서 제공하는 타입으로, register 함수의 시그니처를 정의합니다.
+- <b>FieldValues</b> : 폼 필드의 값들을 나타내는 제네릭 타입입니다. 기본적으로 FieldValues는 모든 폼 필드를 포괄하지만, 특정 폼 필드의 타입을 명시하려면 제네릭으로 커스텀 타입을 전달할 수 있습니다.
+
+
+```
+register: (name: string, options?: RegisterOptions) => {
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur: (event: React.FocusEvent<HTMLInputElement>) => void;
+  ref: (instance: HTMLInputElement | null) => void;
+  name: string;
+};
+```
