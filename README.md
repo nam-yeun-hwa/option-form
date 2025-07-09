@@ -66,4 +66,65 @@ public
    ```
     <Image src="/icons/mdi-home-active.svg" alt="Home Icon" width={30} height={30} priority />
    ```
+## "Cannot find T" 에러 발생
+상위 부모에서 타입을 내려받아서 사용하도록 제너릭으로 사용하도록 하는 과정에서 발생 하였다.
+```
 
+export interface PaymentInputProps<T extends FieldValues> {
+  control: Control<T>;
+  name: FieldPath<T>;
+  errors: FieldErrors<T>;
+  label: string;
+  placeholder?: string;
+  disabled?: boolean;
+  inputMode?: "text" | "search" | "email" | "tel" | "url" | "none" | "numeric" | "decimal" | undefined;
+  pattern?: string;
+  noOutline?: boolean;
+}
+
+
+const FormInputPayment: React.FC<PaymentInputProps<T>(💡여기에서) > = ({
+  control,
+  name,
+  errors,
+  placeholder = "",
+  disabled,
+  pattern,
+  label,
+}) => {  
+````
+
+### 💡 오류가 난 문제의 코드 문제원인
+
+```
+const FormInputPayment: React.FC<PaymentInputProps<T>> = ({
+  control,
+  name,
+  errors,
+  placeholder = "",
+  disabled,
+  pattern,
+  label,
+}) => { ... }
+```
+기본적으로 "Cannot find T" 에러는 TypeScript에서 제네릭 타입 T가 정의되지 않았거나, T를 사용하는 컴포넌트에서 필요한 타입 정보를 제공하지 않아 발생하였다.<br/><br/>
+T extends FieldValues는 react-hook-form의 FieldValues 타입을 확장한 제네릭 타입입니다. 하지만 T가 FormInputPayment 컴포넌트를 사용할 때 구체적으로 정의되지 않으면 TypeScript가 T를 추론하지 못해 에러가 발생했습니다.<br/><br/>
+여기서는 React.FC<PaymentInputProps<T>>에서 T를 정의하지 않았기 때문에 TypeScript가 T를 찾을 수 없었습니다. React.FC는 제네릭 타입을 컴포넌트 선언 시 명시적으로 전달받아야 합니다(예: FormInputPayment<FormData>).
+
+
+### 💡 해결
+
+```
+const FormInputPayment = <T extends FieldValues>({
+  control,
+  name,
+  errors,
+  placeholder = "",
+  disabled,
+  pattern,
+  label,
+}: PaymentInputProps<T>) => { ... }
+```
+
+이 방식은 컴포넌트 정의 자체에 <T extends FieldValues>를 포함해 제네릭 타입을 선언합니다. 이렇게 하면 TypeScript가 T를 함수 시그니처에서 직접 추론하거나 상위 컴포넌트에서 전달된 타입을 통해 해결할 수 있습니다.<br/><br/>
+핵심 차이: 제네릭 선언을 React.FC 타입 지정에서 하는 대신, 함수 표현식의 파라미터 정의에 직접 포함시켰습니다. 이 방식은 react-hook-form 같은 제네릭-heavy 라이브러리에서 자주 사용됩니다.
