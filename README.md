@@ -17,36 +17,35 @@ React Hook Form은 폼 관리 라이브러리 중 가장 널리 사용되는 옵
   
 - 현재 코드에서 register와 <b>errors</b>를 활용해 입력 필드와 에러 메시지를 관리할수 있습니다.
 
-## 언제register를 사용할까?
+  <br/><br/>
 
-register는 HTML input 요소에 직접 바인딩되며, react-hook-form이 내부적으로 DOM 이벤트를 감지해 값을 관리. <br/>
-React 상태를 최소화하고, 네이티브 HTML input의 기본 동작에 의존하므로 렌더링 오버헤드가 적음.<br/>
-간단한 폼 입력 처리 시 매우 가볍고 효율적.<br/>
-코드가 간결함. register(name)을 input에 직접 적용하면 끝.<br/>
-기본 HTML input 동작에 의존하므로 추가 로직이 필요 없는 경우 매우 직관적.<br/><br/>
+## 언제 register를 사용할까?
 
+- register는 HTML input 요소에 직접 바인딩되며, react-hook-form이 내부적으로 DOM 이벤트를 감지해 값을 관리. <br/><br/>
+- React 상태를 최소화하고, 네이티브 HTML input의 기본 동작에 의존하므로 렌더링 오버헤드가 적음.<br/><br/>
+- 간단한 폼 입력 처리 시 매우 가볍고 효율적.<br/><br/>
+- 코드가 간결함. register(name)을 input에 직접 적용하면 끝.<br/><br/>
+- 기본 HTML input 동작에 의존하므로 추가 로직이 필요 없는 경우 매우 직관적.<br/><br/>
+- 간단한 입력 필드(텍스트, 이메일, 비밀번호 등)를 처리할 때.<br/><br/>
+- HTML input 요소의 기본 동작으로 충분할 때.<br/><br/>
+- 포맷팅이나 커스텀 로직이 필요 없는 경우.<br/><br/>
+- 코드가 간결하고 빠르게 작성되어야 할 때.<br/><br/>
 ```
 <input {...register("name")} />
 ```
 
-- 간단한 입력 필드(텍스트, 이메일, 비밀번호 등)를 처리할 때.
-- HTML input 요소의 기본 동작으로 충분할 때.
-- 포맷팅이나 커스텀 로직이 필요 없는 경우.
-- 코드가 간결하고 빠르게 작성되어야 할 때.
-
-
+<br/>
 
 
 ## 언제 Controller를 사용해야 할까?
 
-
-
 Controller는 react-hook-form에서 입력 필드의 동작을 세밀하게 제어할 때 사용됩니다. 
 
-
 ### 1. 커스텀 입력 처리 필요
-상황 : 입력값을 포맷팅(예: 전화번호에 하이픈 추가)해야 할 때.
-Controller를 사용해 전화번호 입력값을 포맷팅(하이픈 추가)하고, 내부적으로는 하이픈 없는 숫자만 저장. <br/>(register로는 이런 커스텀 포맷팅을 처리하기 어렵다.)
+
+- 입력값을 포맷팅<br/>
+- Controller를 사용해 전화번호 입력값을 포맷팅(하이픈 추가)하고, 내부적으로는 하이픈 없는 숫자만 저장.
+- register로는 이런 커스텀 포맷팅을 처리하기 어렵다.<br/>
 ```
 import { Controller, useForm } from "react-hook-form";
 import classNames from "classnames";
@@ -106,8 +105,9 @@ export default PhoneInput;
 ```
 
 ### 2. 비표준 입력 컴포넌트 사용
-Material-UI의 TextField를 react-hook-form과 연동. <br/>
-Material-UI의 TextField는 표준 HTML input이 아니므로 register를 직접 적용할 수 없다. 
+
+- Material-UI의 TextField를 react-hook-form과 연동. <br/>
+- Material-UI의 TextField는 표준 HTML input이 아니므로 register를 직접 적용할 수 없다. 
 ```
 import { Controller, useForm } from "react-hook-form";
 import { TextField } from "@mui/material";
@@ -149,8 +149,9 @@ export default MaterialUIInput;
 ```
 
 ### 복잡한 검증 로직
-비동기 검증(예: 서버에서 사용자 이름 중복 확인).
-Controller의 rules.validate를 사용해 비동기 검증 로직을 구현. (register로는 비동기 검증을 처리하기 복잡하다.)
+
+- 비동기 검증(예: 서버에서 사용자 이름 중복 확인).
+- Controller의 rules.validate를 사용해 비동기 검증 로직을 구현. (register로는 비동기 검증을 처리하기 복잡하다.)
 ```
 import { Controller, useForm } from "react-hook-form";
 import classNames from "classnames";
@@ -204,8 +205,9 @@ const AsyncValidationInput = () => {
 export default AsyncValidationInput;
 ```
 ### 상태 관리 통합
-외부 상태(예: Redux, Zustand)와 입력값 동기화.
-Controller를 사용해 react-hook-form의 상태와 외부 상태를 동기화. onChange를 커스텀해 두 상태를 모두 업데이트.
+
+- 외부 상태(예: Redux, Zustand)와 입력값 동기화.
+- Controller를 사용해 react-hook-form의 상태와 외부 상태를 동기화. onChange를 커스텀해 두 상태를 모두 업데이트.<br/>
 ```
 import { Controller, useForm } from "react-hook-form";
 import { useState } from "react";
@@ -258,8 +260,11 @@ export default StateSyncInput;
 
 
 ### 복합 UI
-입력 필드에 라벨, 단위, 아이콘 등을 포함한 복합 UI (예: 금액 입력).
-Controller를 사용해 금액 입력 필드에 라벨(‘금액’), 단위(‘원’), 쉼표 포맷팅을 포함한 복합 UI 구현. register로는 복합 UI와 포맷팅을 동시에 처리하기 어렵다.
+
+- 입력 필드에 라벨, 단위, 아이콘 등을 포함한 복합 UI (예: 금액 입력).
+- Controller를 사용해 금액 입력 필드에 라벨(‘금액’), 단위(‘원’), 쉼표 포맷팅을 포함한 복합 UI 구현. register로는 복합 UI와 포맷팅을 동시에 처리하기 어렵다.
+ <br/>
+ 
 ```
 import { Controller, useForm } from "react-hook-form";
 import classNames from "classnames";
@@ -316,14 +321,14 @@ const ComplexUIInput = () => {
 
 export default ComplexUIInput;
 ```
-
+<br/>
 - Controller는 React 컴포넌트로, render prop을 통해 입력 필드를 렌더링하며 react-hook-form과 입력값을 연결.<br/>
 - render 함수가 매 렌더링마다 호출되므로, 렌더링 오버헤드가 register보다 약간 더 큼.<br/>
-특히 커스텀 로직(포맷팅, 상태 동기화 등)이 추가되면 약간의 계산 비용이 증가.<br/>
-하지만 react-hook-form은 최적화가 잘 되어 있어, 일반적인 사용 사례에서는 이 오버헤드가 눈에 띄게 크지 않음.<br/>
-render prop과 커스텀 로직(onChange, value 처리 등)을 작성해야 하므로 코드가 더 장황해질 수 있음.<br/>
-특히 포맷팅, 비표준 컴포넌트 연동, 복잡한 검증 등이 추가되면 코드량 증가.<br/>
-대규모 폼(100개 이상 입력 필드)에서는 Controller의 렌더링 오버헤드가 누적될 수 있으니, 불필요한 Controller 사용은 피하고 register를 우선 고려.<br/>
+특히 커스텀 로직(포맷팅, 상태 동기화 등)이 추가되면 약간의 계산 비용이 증가.<br/><br/>
+하지만 react-hook-form은 최적화가 잘 되어 있어, 일반적인 사용 사례에서는 이 오버헤드가 눈에 띄게 크지 않음.<br/><br/>
+render prop과 커스텀 로직(onChange, value 처리 등)을 작성해야 하므로 코드가 더 장황해질 수 있음.<br/><br/>
+특히 포맷팅, 비표준 컴포넌트 연동, 복잡한 검증 등이 추가되면 코드량 증가.<br/><br/>
+대규모 폼(100개 이상 입력 필드)에서는 Controller의 렌더링 오버헤드가 누적될 수 있으니, 불필요한 Controller 사용은 피하고 register를 우선 고려.<br/><br/>
 
 ```
 <Controller
