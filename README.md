@@ -41,7 +41,6 @@ React Hook Form은 폼 관리 라이브러리 중 가장 널리 사용되는 옵
 
 Controller는 React Hook Form을 사용하여 <input> 요소의 값을 폼 필드의 개별 name에 할당하고, 그 값을 React Hook Form의 상태 관리 시스템을 통해 다른 곳에서 접근하여 사용할 수 있도록 하는 구조입니다. 
 
-얘시)
 ```
 const { handleSubmit } = useForm();
 const onSubmit = (data) => {
