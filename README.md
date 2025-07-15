@@ -39,7 +39,31 @@ React Hook Form은 폼 관리 라이브러리 중 가장 널리 사용되는 옵
 
 ## 언제 Controller를 사용해야 할까?
 
-Controller는 react-hook-form에서 입력 필드의 동작을 세밀하게 제어할 때 사용됩니다. 
+Controller는 React Hook Form을 사용하여 <input> 요소의 값을 폼 필드의 개별 name에 할당하고, 그 값을 React Hook Form의 상태 관리 시스템을 통해 다른 곳에서 접근하여 사용할 수 있도록 하는 구조입니다. 
+
+얘시)
+```
+const { handleSubmit } = useForm();
+const onSubmit = (data) => {
+  console.log(data.price); // name이 "price"인 필드의 값(예: 1234)
+};
+<form onSubmit={handleSubmit(onSubmit)}>
+  <Controller
+    name="price"
+    render={({ field: { onChange, value, ...field } }) => (
+      <input
+        {...field}
+        onChange={(e) => {
+          const inputValue = e.target.value.replace(/,/g, "");
+          onChange(inputValue ? Number(inputValue) : undefined);
+        }}
+      />
+    )}
+  />
+  <button type="submit">Submit</button>
+</form>
+```
+input의 기본 onChange 이벤트의 값을 react-hook-form의 개별 name으로 접근가능하게 하여 React Hook Form의 상태 관리!
 
 ### 1. 커스텀 입력 처리 필요
 
